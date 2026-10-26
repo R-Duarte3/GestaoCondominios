@@ -1,0 +1,21 @@
+# Ambiente virtual
+.venv/
+venv/
+
+# Ficheiros temporários do Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Base de dados (dados locais, não vão para o GitHub)
+data/*.db
+data/*.sqlite
+data/*.sqlite3
+
+# Configurações sensíveis
+.env
+
+# Ficheiros do editor / sistema
+.vscode/
+.DS_Store
+Thumbs.db
