@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Registar moradia</h2>
+
+{% if erro %}
+<p class="erro">{{ erro }}</p>
+{% endif %}
+
+<form method="post" action="{{ url_for('moradias.criar') }}">
+    <div>
+        <label for="identificacao">Identificação</label>
+        <input
+            id="identificacao"
+            name="identificacao"
+            type="text"
+            maxlength="100"
+            value="{{ identificacao }}"
+            required
+        >
+    </div>
+
+    <div>
+        <label for="andar">Andar</label>
+        <input
+            id="andar"
+            name="andar"
+            type="text"
+            maxlength="50"
+            value="{{ andar }}"
+        >
+    </div>
+
+    <div>
+        <label for="tipologia">Tipologia</label>
+        <input
+            id="tipologia"
+            name="tipologia"
+            type="text"
+            maxlength="20"
+            value="{{ tipologia }}"
+        >
+    </div>
+
+    <div>
+        <label for="observacoes">Observações</label>
+        <textarea
+            id="observacoes"
+            name="observacoes"
+            rows="3"
+        >{{ observacoes }}</textarea>
+    </div>
+
+    <button type="submit">Guardar</button>
+    <a href="{{ url_for('moradias.listar') }}">Cancelar</a>
+</form>
+{% endblock %}

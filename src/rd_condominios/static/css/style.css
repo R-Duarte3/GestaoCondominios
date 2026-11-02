@@ -1,0 +1,106 @@
+body {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 24px;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+    color: #222;
+    background: #f5f6fa;
+}
+
+header {
+    border-bottom: 2px solid #4f8ef7;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+}
+
+header h1 {
+    color: #1a1a2e;
+    margin: 0 0 8px 0;
+}
+
+nav a {
+    color: #4f8ef7;
+    text-decoration: none;
+    font-weight: bold;
+    margin-right: 16px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+h2 {
+    color: #1a1a2e;
+}
+
+/* Tabelas */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    margin-top: 12px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background: #eaf2fb;
+    color: #1a1a2e;
+}
+
+/* Formulários */
+form div {
+    margin-bottom: 16px;
+}
+
+label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: bold;
+}
+
+input, textarea {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 420px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    padding: 8px 20px;
+    background: #4f8ef7;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #3a7ae0;
+}
+
+/* Mensagem de erro */
+.erro {
+    color: #8b0000;
+    background: #ffecec;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #f5b5b5;
+}
+
+/* Mensagem de sucesso */
+.sucesso {
+    color: #1e6b2f;
+    background: #e6f9ec;
+    padding: 12px;
+    border-radius: 4px;
+    border: 1px solid #a8e0b8;
+}

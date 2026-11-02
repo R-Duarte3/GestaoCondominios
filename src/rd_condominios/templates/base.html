@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RD Condomínios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header>
+        <h1>RD Condomínios</h1>
+        <nav>
+            <a href="{{ url_for('moradias.listar') }}">Moradias</a>
+        </nav>
+    </header>
+
+    <main>
+        {% with mensagens = get_flashed_messages() %}
+            {% if mensagens %}
+                {% for mensagem in mensagens %}
+                <p class="sucesso">{{ mensagem }}</p>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block conteudo %}{% endblock %}
+    </main>
+</body>
+</html>

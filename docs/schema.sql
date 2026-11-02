@@ -2,9 +2,9 @@ PRAGMA foreign_keys = ON;
 
 CREATE TABLE IF NOT EXISTS "moradias" (
     "id_moradia"     INTEGER PRIMARY KEY,
-    "identificacao"  VARCHAR(100) NOT NULL,
+    "identificacao"  VARCHAR(100) NOT NULL UNIQUE,
     "andar"          VARCHAR(50),
-    "fracao"         VARCHAR(20),
+    "tipologia"      VARCHAR(20),
     "observacoes"    TEXT
 );
 
