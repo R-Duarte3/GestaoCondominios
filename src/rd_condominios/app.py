@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for
 from rd_condominios.base_dados import inicializar
 from rd_condominios.config import obter_caminho_bd
 from rd_condominios.web.moradias import moradias_bp
+from rd_condominios.web.moradores import moradores_bp
 
 
 def criar_app():
@@ -13,6 +14,7 @@ def criar_app():
     inicializar(obter_caminho_bd())
 
     app.register_blueprint(moradias_bp)
+    app.register_blueprint(moradores_bp)
 
     @app.route("/")
     def inicio():

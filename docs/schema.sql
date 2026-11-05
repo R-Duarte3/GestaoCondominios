@@ -18,7 +18,6 @@ CREATE TABLE IF NOT EXISTS "moradores" (
     "tipo"           VARCHAR(20) NOT NULL,
     "id_moradia"     INTEGER NOT NULL,
     FOREIGN KEY ("id_moradia") REFERENCES "moradias"("id_moradia")
-        ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE IF NOT EXISTS "quotas" (

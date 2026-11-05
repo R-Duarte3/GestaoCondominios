@@ -64,7 +64,7 @@ label {
     font-weight: bold;
 }
 
-input, textarea {
+input, textarea, select {
     box-sizing: border-box;
     width: 100%;
     max-width: 420px;
