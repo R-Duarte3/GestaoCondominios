@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Quotas</h2>
+
+<p>
+    <a href="{{ url_for('quotas.formulario') }}">Registar quota</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Moradia</th>
+            <th>Ano</th>
+            <th>Mês</th>
+            <th>Valor</th>
+            <th>Vencimento</th>
+            <th>Pagamento</th>
+            <th>Estado</th>
+            <th>Ação</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for quota in quotas %}
+        <tr>
+            <td>{{ quota.id_quotas }}</td>
+            <td>{{ quota.moradia_identificacao }}</td>
+            <td>{{ quota.ano }}</td>
+            <td>{{ quota.mes }}</td>
+            <td>{{ "%.2f"|format(quota.valor) }} €</td>
+            <td>{{ quota.data_vencimento }}</td>
+            <td>{{ quota.data_pagamento or "—" }}</td>
+            <td>
+                {% if quota.data_pagamento %}
+                    <span class="estado-pago">Paga</span>
+                {% elif quota.data_vencimento < hoje %}
+                    <span class="estado-atraso">Em atraso</span>
+                {% else %}
+                    <span class="estado-pendente">Pendente</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not quota.data_pagamento %}
+                <form method="post" action="{{ url_for('quotas.pagar', id_quotas=quota.id_quotas) }}">
+                    <input type="date" name="data_pagamento" required>
+                    <button type="submit">Pagar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="9">Ainda não existem quotas registadas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

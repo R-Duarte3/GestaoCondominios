@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Despesas</h2>
+
+<p>
+    <a href="{{ url_for('despesas.formulario') }}">Registar despesa</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Data</th>
+            <th>Descrição</th>
+            <th>Categoria</th>
+            <th>Valor</th>
+            <th>Fornecedor</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for despesa in despesas %}
+        <tr>
+            <td>{{ despesa.id_despesas }}</td>
+            <td>{{ despesa.data }}</td>
+            <td>{{ despesa.descricao }}</td>
+            <td>{{ nomes_categorias[despesa.categoria] }}</td>
+            <td>{{ "%.2f"|format(despesa.valor) }} €</td>
+            <td>{{ despesa.fornecedor or "—" }}</td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="6">Ainda não existem despesas registadas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

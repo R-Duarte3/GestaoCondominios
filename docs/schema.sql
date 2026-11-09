@@ -28,18 +28,13 @@ CREATE TABLE IF NOT EXISTS "quotas" (
     "valor"           REAL NOT NULL,
     "data_vencimento" DATE NOT NULL,
     "data_pagamento"  DATE,
-    -- pago; pendente; em atraso
-    "estado"          VARCHAR(20) NOT NULL,
-    FOREIGN KEY ("id_moradia") REFERENCES "moradias"("id_moradia")
-        ON UPDATE NO ACTION ON DELETE NO ACTION,
-    -- impede duas quotas para a mesma moradia no mesmo mes e ano
+    FOREIGN KEY ("id_moradia") REFERENCES "moradias"("id_moradia"),
     UNIQUE ("id_moradia", "ano", "mes")
 );
 
 CREATE TABLE IF NOT EXISTS "despesas" (
     "id_despesas"  INTEGER PRIMARY KEY,
     "descricao"    VARCHAR(200) NOT NULL,
-    -- limpeza; seguro; agua; eletricidade; obra; outras
     "categoria"    VARCHAR(50) NOT NULL,
     "valor"        REAL NOT NULL,
     "data"         DATE NOT NULL,

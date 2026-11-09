@@ -33,6 +33,27 @@ def inicializar(caminho):
                     id_moradia   INTEGER NOT NULL,
                     FOREIGN KEY (id_moradia) REFERENCES moradias(id_moradia)
                 );
+
+                CREATE TABLE IF NOT EXISTS quotas (
+                    id_quotas       INTEGER PRIMARY KEY,
+                    id_moradia      INTEGER NOT NULL,
+                    ano             INTEGER NOT NULL,
+                    mes             INTEGER NOT NULL,
+                    valor           REAL NOT NULL,
+                    data_vencimento DATE NOT NULL,
+                    data_pagamento  DATE,
+                    FOREIGN KEY (id_moradia) REFERENCES moradias(id_moradia),
+                    UNIQUE (id_moradia, ano, mes)
+                );
+
+                CREATE TABLE IF NOT EXISTS despesas (
+                    id_despesas  INTEGER PRIMARY KEY,
+                    descricao    VARCHAR(200) NOT NULL,
+                    categoria    VARCHAR(50) NOT NULL,
+                    valor        REAL NOT NULL,
+                    data         DATE NOT NULL,
+                    fornecedor   VARCHAR(100)
+                );
             """)
 
     finally:

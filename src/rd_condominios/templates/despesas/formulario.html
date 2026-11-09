@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Registar despesa</h2>
+
+{% if erro %}
+<p class="erro">{{ erro }}</p>
+{% endif %}
+
+<form method="post" action="{{ url_for('despesas.criar') }}">
+    <div>
+        <label for="descricao">Descrição</label>
+        <input
+            id="descricao"
+            name="descricao"
+            type="text"
+            maxlength="200"
+            value="{{ descricao }}"
+            required
+        >
+    </div>
+
+    <div>
+        <label for="categoria">Categoria</label>
+        <select id="categoria" name="categoria" required>
+            <option value="">-- Escolha a categoria --</option>
+            {% for item in categorias %}
+            <option value="{{ item }}" {% if categoria == item %}selected{% endif %}>
+                {{ nomes_categorias[item] }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="valor">Valor (€)</label>
+        <input
+            id="valor"
+            name="valor"
+            type="number"
+            step="0.01"
+            min="0"
+            value="{{ valor }}"
+            required
+        >
+    </div>
+
+    <div>
+        <label for="data">Data</label>
+        <input
+            id="data"
+            name="data"
+            type="date"
+            value="{{ data }}"
+            required
+        >
+    </div>
+
+    <div>
+        <label for="fornecedor">Fornecedor (opcional)</label>
+        <input
+            id="fornecedor"
+            name="fornecedor"
+            type="text"
+            maxlength="100"
+            value="{{ fornecedor }}"
+        >
+    </div>
+
+    <button type="submit">Guardar</button>
+    <a href="{{ url_for('despesas.listar') }}">Cancelar</a>
+</form>
+{% endblock %}
