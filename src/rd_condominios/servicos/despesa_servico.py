@@ -2,11 +2,19 @@ from rd_condominios.dominio.despesa import Despesa, CATEGORIAS
 
 
 class DespesaServico:
-    def __init__(self, repositorio):
+    def __init__(self, repositorio, moradia_repositorio):
         self.repositorio = repositorio
+        self.moradia_repositorio = moradia_repositorio
 
     def listar_despesas(self):
-        return self.repositorio.listar()
+        numero = self.moradia_repositorio.contar()
+        resultado = []
+        for despesa in self.repositorio.listar():
+            resultado.append((despesa, despesa.parte_por_moradia(numero)))
+        return resultado
+
+    def numero_moradias(self):
+        return self.moradia_repositorio.contar()
 
     def listar_categorias(self):
         return CATEGORIAS

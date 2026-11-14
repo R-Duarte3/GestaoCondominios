@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-CATEGORIAS = ("limpeza", "seguro", "agua", "eletricidade", "obra", "outras")
+CATEGORIAS = ("limpeza", "seguro", "agua", "eletricidade", "outras")
 
 
 class DadosDespesaInvalidos(ValueError):
@@ -48,3 +48,8 @@ class Despesa:
         object.__setattr__(self, "categoria", categoria)
         object.__setattr__(self, "data", data)
         object.__setattr__(self, "fornecedor", fornecedor)
+
+    def parte_por_moradia(self, numero_moradias):
+        if numero_moradias <= 0:
+            return None
+        return round(self.valor / numero_moradias, 2)

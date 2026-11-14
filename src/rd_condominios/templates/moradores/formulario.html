@@ -77,6 +77,18 @@
             {% endfor %}
         </select>
     </div>
+    
+    <div>
+        <label for="data_entrada">Data de entrada</label>
+        <input
+            id="data_entrada"
+            name="data_entrada"
+            type="date"
+            value="{{ data_entrada }}"
+            required
+        >
+    </div>
+
 
     <button type="submit">Guardar</button>
     <a href="{{ url_for('moradores.listar') }}">Cancelar</a>

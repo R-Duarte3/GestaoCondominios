@@ -119,3 +119,28 @@ button:hover {
     color: #a12020;
     font-weight: bold;
 }
+
+table input, table select {
+    width: auto;
+    max-width: 150px;
+    margin-bottom: 4px;
+}
+
+.estado-antigo {
+    color: #666;
+    font-weight: bold;
+}
+
+.form-apagar {
+    display: inline;
+}
+
+.botao-apagar {
+    background: #c0392b;
+    margin-left: 8px;
+    padding: 4px 12px;
+}
+
+.botao-apagar:hover {
+    background: #a93226;
+}

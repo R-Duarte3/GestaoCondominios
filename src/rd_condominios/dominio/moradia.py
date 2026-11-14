@@ -9,6 +9,10 @@ class IdentificacaoDuplicada(Exception):
     pass
 
 
+class MoradiaEmUso(Exception):
+    pass
+
+
 @dataclass(frozen=True)
 class Moradia:
     id_moradia: int | None

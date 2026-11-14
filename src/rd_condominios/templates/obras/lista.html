@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block conteudo %}
+<h2>Obras e reparações</h2>
+
+{% if erro %}
+<p class="erro">{{ erro }}</p>
+{% endif %}
+
+<p>
+    <a href="{{ url_for('obras.formulario') }}">Registar obra</a>
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Pedido</th>
+            <th>Descrição</th>
+            <th>Orçamento</th>
+            <th>Estado</th>
+            <th>Conclusão</th>
+            <th>Custo final</th>
+            <th>Atualizar estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obra in obras %}
+        <tr>
+            <td>{{ obra.id_obras }}</td>
+            <td>{{ obra.data_pedido }}</td>
+            <td>{{ obra.descricao }}</td>
+            <td>
+                {% if obra.orcamento is not none %}
+                    {{ "%.2f"|format(obra.orcamento) }} €
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>{{ nomes_estados[obra.estado] }}</td>
+            <td>{{ obra.data_conclusao or "—" }}</td>
+            <td>
+                {% if obra.custo_final is not none %}
+                    {{ "%.2f"|format(obra.custo_final) }} €
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+            <td>
+                <form method="post" action="{{ url_for('obras.atualizar_estado', id_obras=obra.id_obras) }}">
+                    <select name="estado" required>
+                        {% for item in estados %}
+                        <option value="{{ item }}" {% if obra.estado == item %}selected{% endif %}>
+                            {{ nomes_estados[item] }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <input type="date" name="data_conclusao" value="{{ obra.data_conclusao }}">
+                    <input type="number" name="custo_final" step="0.01" min="0"
+                           placeholder="Custo final"
+                           value="{{ obra.custo_final if obra.custo_final is not none else '' }}">
+                    <button type="submit">Atualizar</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="8">Ainda não existem obras registadas.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

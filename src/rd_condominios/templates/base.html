@@ -2,7 +2,7 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>RD Condomínios</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -14,16 +14,15 @@
             <a href="{{ url_for('moradores.listar') }}">Moradores</a>
             <a href="{{ url_for('quotas.listar') }}">Quotas</a>
             <a href="{{ url_for('despesas.listar') }}">Despesas</a>
+            <a href="{{ url_for('obras.listar') }}">Obras</a>
         </nav>
     </header>
 
     <main>
-        {% with mensagens = get_flashed_messages() %}
-            {% if mensagens %}
-                {% for mensagem in mensagens %}
-                <p class="sucesso">{{ mensagem }}</p>
-                {% endfor %}
-            {% endif %}
+        {% with mensagens = get_flashed_messages(with_categories=true) %}
+            {% for categoria, mensagem in mensagens %}
+            <p class="{{ 'erro' if categoria == 'erro' else 'sucesso' }}">{{ mensagem }}</p>
+            {% endfor %}
         {% endwith %}
 
         {% block conteudo %}{% endblock %}

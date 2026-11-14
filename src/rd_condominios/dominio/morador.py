@@ -18,6 +18,8 @@ class Morador:
     email: str
     tipo: str
     id_moradia: int
+    data_entrada: str
+    data_saida: str
 
     def __post_init__(self):
         nome = self.nome.strip()
@@ -25,6 +27,8 @@ class Morador:
         telefone = self.telefone.strip()
         email = self.email.strip()
         tipo = self.tipo.strip()
+        data_entrada = self.data_entrada.strip()
+        data_saida = self.data_saida.strip()
 
         if not nome:
             raise DadosMoradorInvalidos(
@@ -46,8 +50,18 @@ class Morador:
             raise DadosMoradorInvalidos(
                 "O tipo deve ser 'Proprietário' ou 'Inquilino'.")
 
+        if not data_entrada:
+            raise DadosMoradorInvalidos(
+                "A data de entrada é obrigatória!")
+
+        if data_saida and data_saida < data_entrada:
+            raise DadosMoradorInvalidos(
+                "A data de saída não pode ser anterior à data de entrada!")
+
         object.__setattr__(self, "nome", nome)
         object.__setattr__(self, "nif", nif)
         object.__setattr__(self, "telefone", telefone)
         object.__setattr__(self, "email", email)
         object.__setattr__(self, "tipo", tipo)
+        object.__setattr__(self, "data_entrada", data_entrada)
+        object.__setattr__(self, "data_saida", data_saida)

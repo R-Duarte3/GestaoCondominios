@@ -24,13 +24,15 @@ def inicializar(caminho):
                 );
 
                 CREATE TABLE IF NOT EXISTS moradores (
-                    id_moradores INTEGER PRIMARY KEY,
-                    nome          VARCHAR(100) NOT NULL,
-                    nif           VARCHAR(9) NOT NULL UNIQUE,
-                    telefone     VARCHAR(20),
-                    email        VARCHAR(100),
-                    tipo         VARCHAR(20) NOT NULL,
-                    id_moradia   INTEGER NOT NULL,
+                    id_moradores   INTEGER PRIMARY KEY,
+                    nome           VARCHAR(100) NOT NULL,
+                    nif            VARCHAR(9) NOT NULL UNIQUE,
+                    telefone       VARCHAR(20),
+                    email          VARCHAR(100),
+                    tipo           VARCHAR(20) NOT NULL,
+                    id_moradia     INTEGER NOT NULL,
+                    data_entrada   DATE NOT NULL,
+                    data_saida     DATE,
                     FOREIGN KEY (id_moradia) REFERENCES moradias(id_moradia)
                 );
 
@@ -53,6 +55,16 @@ def inicializar(caminho):
                     valor        REAL NOT NULL,
                     data         DATE NOT NULL,
                     fornecedor   VARCHAR(100)
+                );
+
+                CREATE TABLE IF NOT EXISTS obras (
+                    id_obras        INTEGER PRIMARY KEY,
+                    descricao       VARCHAR(200) NOT NULL,
+                    data_pedido     DATE NOT NULL,
+                    data_conclusao  DATE,
+                    estado          VARCHAR(20) NOT NULL,
+                    orcamento       REAL,
+                    custo_final     REAL                
                 );
             """)
 

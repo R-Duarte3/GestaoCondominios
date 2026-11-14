@@ -5,6 +5,7 @@ from rd_condominios.config import obter_caminho_bd
 from rd_condominios.dominio.despesa import DadosDespesaInvalidos
 from rd_condominios.repositorios.despesa_repositorio import DespesaRepositorio
 from rd_condominios.servicos.despesa_servico import DespesaServico
+from rd_condominios.repositorios.moradia_repositorio import MoradiaRepositorio
 
 despesas_bp = Blueprint("despesas", __name__, url_prefix="/despesas")
 
@@ -13,14 +14,14 @@ NOMES_CATEGORIAS = {
     "seguro": "Seguro",
     "agua": "Água",
     "eletricidade": "Eletricidade",
-    "obra": "Obra",
     "outras": "Outras",
 }
 
 
 def construir_servico(ligacao):
     repositorio = DespesaRepositorio(ligacao)
-    return DespesaServico(repositorio)
+    moradia_repositorio = MoradiaRepositorio(ligacao)
+    return DespesaServico(repositorio, moradia_repositorio)
 
 
 @despesas_bp.route("/")
@@ -29,10 +30,12 @@ def listar():
     try:
         servico = construir_servico(ligacao)
         despesas = servico.listar_despesas()
+        numero_moradias = servico.numero_moradias()
     finally:
         ligacao.close()
     return render_template("despesas/lista.html",
                            despesas=despesas,
+                           numero_moradias=numero_moradias,
                            nomes_categorias=NOMES_CATEGORIAS)
 
 

@@ -3,6 +3,10 @@
 {% block conteudo %}
 <h2>Moradores</h2>
 
+{% if erro %}
+<p class="erro">{{ erro }}</p>
+{% endif %}
+
 <p>
     <a href="{{ url_for('moradores.formulario') }}">Registar morador</a>
 </p>
@@ -17,6 +21,10 @@
             <th>Email</th>
             <th>Tipo</th>
             <th>Moradia</th>
+            <th>Entrada</th>
+            <th>Saída</th>
+            <th>Situação</th>
+            <th>Registar saída</th>
         </tr>
     </thead>
     <tbody>
@@ -31,10 +39,27 @@
                 {% if morador.tipo == "proprietario" %}Proprietário{% else %}Inquilino{% endif %}
             </td>
             <td>{{ morador.moradia_identificacao }}</td>
+            <td>{{ morador.data_entrada }}</td>
+            <td>{{ morador.data_saida or "—" }}</td>
+            <td>
+                {% if morador.data_saida %}
+                    <span class="estado-antigo">Antigo</span>
+                {% else %}
+                    <span class="estado-pago">Atual</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if not morador.data_saida %}
+                <form method="post" action="{{ url_for('moradores.registar_saida', id_moradores=morador.id_moradores) }}">
+                    <input type="date" name="data_saida" min="{{ morador.data_entrada }}" required>
+                    <button type="submit">Registar</button>
+                </form>
+                {% endif %}
+            </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="7">Ainda não existem moradores registados.</td>
+            <td colspan="11">Ainda não existem moradores registados.</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -15,6 +15,7 @@
             <th>Andar</th>
             <th>Tipologia</th>
             <th>Observações</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
@@ -25,10 +26,18 @@
             <td>{{ moradia.andar }}</td>
             <td>{{ moradia.tipologia }}</td>
             <td>{{ moradia.observacoes }}</td>
+            <td>
+                <a href="{{ url_for('moradias.formulario_editar', id_moradia=moradia.id_moradia) }}">Editar</a>
+                <form class="form-apagar" method="post"
+                      action="{{ url_for('moradias.apagar', id_moradia=moradia.id_moradia) }}"
+                      onsubmit="return confirm('Tem a certeza que quer apagar esta moradia?');">
+                    <button type="submit" class="botao-apagar">Apagar</button>
+                </form>
+            </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="5">Ainda não existem moradias registadas.</td>
+            <td colspan="6">Ainda não existem moradias registadas.</td>
         </tr>
         {% endfor %}
     </tbody>

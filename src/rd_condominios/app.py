@@ -6,6 +6,7 @@ from rd_condominios.web.moradias import moradias_bp
 from rd_condominios.web.moradores import moradores_bp
 from rd_condominios.web.quotas import quotas_bp
 from rd_condominios.web.despesas import despesas_bp
+from rd_condominios.web.obras import obras_bp
 
 
 def criar_app():
@@ -18,6 +19,7 @@ def criar_app():
     app.register_blueprint(moradores_bp)
     app.register_blueprint(quotas_bp)
     app.register_blueprint(despesas_bp)
+    app.register_blueprint(obras_bp)
 
     @app.route("/")
     def inicio():

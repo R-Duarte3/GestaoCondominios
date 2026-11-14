@@ -24,7 +24,7 @@ def listar():
         moradores = servico.listar_moradores()
     finally:
         ligacao.close()
-    return render_template("moradores/lista.html", moradores=moradores)
+    return render_template("moradores/lista.html", moradores=moradores, erro=None)
 
 
 @moradores_bp.route("/novo")
@@ -43,6 +43,7 @@ def formulario():
                            email="",
                            tipo="",
                            id_moradia="",
+                           data_entrada="",
                            moradias=moradias
                            )
 
@@ -55,6 +56,7 @@ def criar():
     email = request.form.get("email", "")
     tipo = request.form.get("tipo", "")
     id_moradia_texto = request.form.get("id_moradia", "")
+    data_entrada = request.form.get("data_entrada", "")
 
     ligacao = ligar(obter_caminho_bd())
     try:
@@ -62,8 +64,9 @@ def criar():
         try:
             id_moradia = int(id_moradia_texto)
         except ValueError:
-            raise DadosMoradorInvalidos("Tem de escolher uma moradia.")
-        servico.criar_morador(nome, nif, telefone, email, tipo, id_moradia)
+            raise DadosMoradorInvalidos("Tem de escolher uma moradia!")
+        servico.criar_morador(nome, nif, telefone, email,
+                              tipo, id_moradia, data_entrada)
     except (DadosMoradorInvalidos, NifDuplicado) as erro:
         moradias = servico.listar_moradias()
         return render_template("moradores/formulario.html",
@@ -74,10 +77,31 @@ def criar():
                                email=email,
                                tipo=tipo,
                                id_moradia=id_moradia_texto,
+                               data_entrada=data_entrada,
                                moradias=moradias
                                )
     finally:
         ligacao.close()
 
     flash("Morador registado com sucesso!")
+    return redirect(url_for("moradores.listar"))
+
+
+@moradores_bp.route("/saida/<int:id_moradores>", methods=["POST"])
+def registar_saida(id_moradores):
+    data_saida = request.form.get("data_saida", "")
+
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        servico.registar_saida(id_moradores, data_saida)
+    except DadosMoradorInvalidos as erro:
+        moradores = servico.listar_moradores()
+        return render_template("moradores/lista.html",
+                               moradores=moradores,
+                               erro=str(erro))
+    finally:
+        ligacao.close()
+
+    flash("Saída do morador registada com sucesso!")
     return redirect(url_for("moradores.listar"))

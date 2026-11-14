@@ -7,6 +7,11 @@
     <a href="{{ url_for('despesas.formulario') }}">Registar despesa</a>
 </p>
 
+<p>
+    As despesas são divididas em partes iguais pelas moradias
+    (atualmente {{ numero_moradias }}).
+</p>
+
 <table>
     <thead>
         <tr>
@@ -15,22 +20,30 @@
             <th>Descrição</th>
             <th>Categoria</th>
             <th>Valor</th>
+            <th>Parte por moradia</th>
             <th>Fornecedor</th>
         </tr>
     </thead>
     <tbody>
-        {% for despesa in despesas %}
+        {% for despesa, parte in despesas %}
         <tr>
             <td>{{ despesa.id_despesas }}</td>
             <td>{{ despesa.data }}</td>
             <td>{{ despesa.descricao }}</td>
             <td>{{ nomes_categorias[despesa.categoria] }}</td>
             <td>{{ "%.2f"|format(despesa.valor) }} €</td>
+            <td>
+                {% if parte is not none %}
+                    {{ "%.2f"|format(parte) }} €
+                {% else %}
+                    —
+                {% endif %}
+            </td>
             <td>{{ despesa.fornecedor or "—" }}</td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="6">Ainda não existem despesas registadas.</td>
+            <td colspan="7">Ainda não existem despesas registadas.</td>
         </tr>
         {% endfor %}
     </tbody>
