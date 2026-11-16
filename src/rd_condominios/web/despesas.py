@@ -24,6 +24,49 @@ def construir_servico(ligacao):
     return DespesaServico(repositorio, moradia_repositorio)
 
 
+def dados_em_branco():
+    return {
+        "descricao": "",
+        "categoria": "",
+        "valor": "",
+        "data": "",
+        "fornecedor": "",
+    }
+
+
+def ler_formulario():
+    return {
+        "descricao": request.form.get("descricao", ""),
+        "categoria": request.form.get("categoria", ""),
+        "valor": request.form.get("valor", ""),
+        "data": request.form.get("data", ""),
+        "fornecedor": request.form.get("fornecedor", ""),
+    }
+
+
+def converter_valor(dados):
+    try:
+        return float(dados["valor"])
+    except ValueError:
+        raise DadosDespesaInvalidos("O valor indicado não é válido!")
+
+
+def apresentar_formulario(servico, dados, titulo, acao, erro=None):
+    return render_template(
+        "despesas/formulario.html",
+        titulo=titulo,
+        acao=acao,
+        erro=erro,
+        descricao=dados["descricao"],
+        categoria=dados["categoria"],
+        valor=dados["valor"],
+        data=dados["data"],
+        fornecedor=dados["fornecedor"],
+        categorias=servico.listar_categorias(),
+        nomes_categorias=NOMES_CATEGORIAS,
+    )
+
+
 @despesas_bp.route("/")
 def listar():
     ligacao = ligar(obter_caminho_bd())
@@ -44,52 +87,107 @@ def formulario():
     ligacao = ligar(obter_caminho_bd())
     try:
         servico = construir_servico(ligacao)
-        categorias = servico.listar_categorias()
+        return apresentar_formulario(
+            servico,
+            dados_em_branco(),
+            "Registar despesa",
+            url_for("despesas.criar"),
+        )
     finally:
         ligacao.close()
-    return render_template("despesas/formulario.html",
-                           erro=None,
-                           descricao="",
-                           categoria="",
-                           valor="",
-                           data="",
-                           fornecedor="",
-                           categorias=categorias,
-                           nomes_categorias=NOMES_CATEGORIAS,
-                           )
 
 
 @despesas_bp.route("/", methods=["POST"])
 def criar():
-    descricao = request.form.get("descricao", "")
-    categoria = request.form.get("categoria", "")
-    valor_texto = request.form.get("valor", "")
-    data = request.form.get("data", "")
-    fornecedor = request.form.get("fornecedor", "")
+    dados = ler_formulario()
 
     ligacao = ligar(obter_caminho_bd())
     try:
         servico = construir_servico(ligacao)
         try:
-            valor = float(valor_texto)
-        except ValueError:
-            raise DadosDespesaInvalidos("O valor indicado não é válido!")
-        servico.criar_despesa(descricao, categoria, valor, data, fornecedor)
-    except DadosDespesaInvalidos as erro:
-        categorias = servico.listar_categorias()
-        return render_template(
-            "despesas/formulario.html",
-            erro=str(erro),
-            descricao=descricao,
-            categoria=categoria,
-            valor=valor_texto,
-            data=data,
-            fornecedor=fornecedor,
-            categorias=categorias,
-            nomes_categorias=NOMES_CATEGORIAS,
-        )
+            valor = converter_valor(dados)
+            servico.criar_despesa(
+                dados["descricao"], dados["categoria"], valor, dados["data"], dados["fornecedor"])
+        except DadosDespesaInvalidos as erro:
+            return apresentar_formulario(
+                servico,
+                dados,
+                "Registar despesa",
+                url_for("despesa.criar"),
+                erro=str(erro),
+            )
     finally:
         ligacao.close()
 
     flash("Despesa registada com sucesso!")
+    return redirect(url_for("despesas.listar"))
+
+
+@despesas_bp.route("/<int:id_despesas>/editar")
+def formulario_editar(id_despesas):
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        despesa = servico.obter_despesa(id_despesas)
+        if despesa is None:
+            flash("A despesa indicada não existe!", "erro")
+            return redirect(url_for("despesas.listar"))
+        dados = {
+            "descricao": despesa.descricao,
+            "categoria": despesa.categoria,
+            "valor": despesa.valor,
+            "data": despesa.data,
+            "fornecedor": despesa.fornecedor,
+        }
+        return apresentar_formulario(
+            servico,
+            dados,
+            "Editar despesa",
+            url_for("despesas.editar", id_despesas=id_despesas),
+        )
+    finally:
+        ligacao.close()
+
+
+@despesas_bp.route("/<int:id_despesas>/editar", methods=["POST"])
+def editar(id_despesas):
+    dados = ler_formulario()
+
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        try:
+            valor = converter_valor(dados)
+            servico.editar_despesa(id_despesas, dados["descricao"],
+                                   dados["categoria"], valor, dados["data"],
+                                   dados["fornecedor"])
+        except DadosDespesaInvalidos as erro:
+            return apresentar_formulario(
+                servico,
+                dados,
+                "Editar despesa",
+                url_for("despesas.editar", id_despesas=id_despesas),
+                erro=str(erro),
+            )
+    finally:
+        ligacao.close()
+
+    flash("Despesa atualizada com sucesso!")
+    return redirect(url_for("despesas.listar"))
+
+
+@despesas_bp.route("/<int:id_despesas>/apagar", methods=["POST"])
+def apagar(id_despesas):
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        try:
+            servico.apagar_despesa(id_despesas)
+        except DadosDespesaInvalidos as erro:
+            flash(str(erro), "erro")
+            return redirect(url_for("despesas.listar"))
+    finally:
+        ligacao.close()
+
+    flash("Despesa apagada com sucesso!")
     return redirect(url_for("despesas.listar"))

@@ -16,6 +16,45 @@ def construir_servico(ligacao):
     return MoradorServico(repositorio, moradia_repositorio)
 
 
+def dados_em_branco():
+    return {
+        "nome": "",
+        "nif": "",
+        "telefone": "",
+        "email": "",
+        "tipo": "",
+        "id_moradia": "",
+        "data_entrada": "",
+        "data_saida": "",
+    }
+
+
+def ler_formulario():
+    dados = {}
+    for campo in dados_em_branco():
+        dados[campo] = request.form.get(campo, "")
+    return dados
+
+
+def converter_moradia(texto):
+    try:
+        return int(texto)
+    except ValueError:
+        raise DadosMoradorInvalidos("Tem de escolher uma moradia!")
+
+
+def apresentar_formulario(servico, titulo, acao, erro, dados, mostrar_saida):
+    return render_template(
+        "moradores/formulario.html",
+        titulo=titulo,
+        acao=acao,
+        erro=erro,
+        mostrar_saida=mostrar_saida,
+        moradias=servico.listar_moradias(),
+        **dados,
+    )
+
+
 @moradores_bp.route("/")
 def listar():
     ligacao = ligar(obter_caminho_bd())
@@ -32,58 +71,96 @@ def formulario():
     ligacao = ligar(obter_caminho_bd())
     try:
         servico = construir_servico(ligacao)
-        moradias = servico.listar_moradias()
+        return apresentar_formulario(
+            servico, "Registar morador", url_for("moradores.criar"),
+            None, dados_em_branco(), False)
     finally:
         ligacao.close()
-    return render_template("moradores/formulario.html",
-                           erro=None,
-                           nome="",
-                           nif="",
-                           telefone="",
-                           email="",
-                           tipo="",
-                           id_moradia="",
-                           data_entrada="",
-                           moradias=moradias
-                           )
 
 
 @moradores_bp.route("/", methods=["POST"])
 def criar():
-    nome = request.form.get("nome", "")
-    nif = request.form.get("nif", "")
-    telefone = request.form.get("telefone", "")
-    email = request.form.get("email", "")
-    tipo = request.form.get("tipo", "")
-    id_moradia_texto = request.form.get("id_moradia", "")
-    data_entrada = request.form.get("data_entrada", "")
+    dados = ler_formulario()
 
     ligacao = ligar(obter_caminho_bd())
     try:
         servico = construir_servico(ligacao)
-        try:
-            id_moradia = int(id_moradia_texto)
-        except ValueError:
-            raise DadosMoradorInvalidos("Tem de escolher uma moradia!")
-        servico.criar_morador(nome, nif, telefone, email,
-                              tipo, id_moradia, data_entrada)
+        servico.criar_morador(
+            dados["nome"], dados["nif"], dados["telefone"], dados["email"], dados["tipo"], converter_moradia(dados["id_moradia"]), dados["data_entrada"])
     except (DadosMoradorInvalidos, NifDuplicado) as erro:
-        moradias = servico.listar_moradias()
-        return render_template("moradores/formulario.html",
-                               erro=str(erro),
-                               nome=nome,
-                               nif=nif,
-                               telefone=telefone,
-                               email=email,
-                               tipo=tipo,
-                               id_moradia=id_moradia_texto,
-                               data_entrada=data_entrada,
-                               moradias=moradias
-                               )
+        return apresentar_formulario(
+            servico, "Registar morador", url_for("moradores.criar"), str(erro), dados, False)
     finally:
         ligacao.close()
 
     flash("Morador registado com sucesso!")
+    return redirect(url_for("moradores.listar"))
+
+
+@moradores_bp.route("/<int:id_moradores>/editar")
+def formulario_editar(id_moradores):
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        morador = servico.obter_morador(id_moradores)
+        dados = {
+            "nome": morador.nome,
+            "nif": morador.nif,
+            "telefone": morador.telefone,
+            "email": morador.email,
+            "tipo": morador.tipo,
+            "id_moradia": str(morador.id_moradia),
+            "data_entrada": morador.data_entrada,
+            "data_saida": morador.data_saida,
+        }
+        return apresentar_formulario(
+            servico, "Editar morador",
+            url_for("moradores.editar", id_moradores=id_moradores),
+            None, dados, True)
+    except DadosMoradorInvalidos as erro:
+        flash(str(erro), "erro")
+        return redirect(url_for("moradores.listar"))
+    finally:
+        ligacao.close()
+
+
+@moradores_bp.route("/<int:id_moradores>/editar", methods=["POST"])
+def editar(id_moradores):
+    dados = ler_formulario()
+
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        servico.editar_morador(
+            id_moradores, dados["nome"], dados["nif"], dados["telefone"],
+            dados["email"], dados["tipo"],
+            converter_moradia(dados["id_moradia"]),
+            dados["data_entrada"], dados["data_saida"])
+    except (DadosMoradorInvalidos, NifDuplicado) as erro:
+        return apresentar_formulario(
+            servico, "Editar morador",
+            url_for("moradores.editar", id_moradores=id_moradores),
+            str(erro), dados, True)
+    finally:
+        ligacao.close()
+
+    flash("Morador atualizado com sucesso!")
+    return redirect(url_for("moradores.listar"))
+
+
+@moradores_bp.route("/<int:id_moradores>/apagar", methods=["POST"])
+def apagar(id_moradores):
+    ligacao = ligar(obter_caminho_bd())
+    try:
+        servico = construir_servico(ligacao)
+        servico.apagar_morador(id_moradores)
+    except DadosMoradorInvalidos as erro:
+        flash(str(erro), "erro")
+        return redirect(url_for("moradores.listar"))
+    finally:
+        ligacao.close()
+
+    flash("Morador apagado com sucesso!")
     return redirect(url_for("moradores.listar"))
 
 

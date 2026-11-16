@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<h2>Registar quota</h2>
+<h2>{{ titulo }}</h2>
 
 {% if erro %}
 <p class="erro">{{ erro }}</p>
 {% endif %}
 
 {% if moradias %}
-<form method="post" action="{{ url_for('quotas.criar') }}">
+<form method="post" action="{{ acao }}">
     <div>
         <label for="id_moradia">Moradia</label>
         <select id="id_moradia" name="id_moradia" required>
@@ -67,6 +67,18 @@
             required
         >
     </div>
+
+    {% if mostrar_pagamento %}
+    <div>
+        <label for="data_pagamento">Data de pagamento (deixe vazio se ainda não pagou)</label>
+        <input
+            id="data_pagamento"
+            name="data_pagamento"
+            type="date"
+            value="{{ data_pagamento }}"
+        >
+    </div>
+    {% endif %}
 
     <button type="submit">Guardar</button>
     <a href="{{ url_for('quotas.listar') }}">Cancelar</a>

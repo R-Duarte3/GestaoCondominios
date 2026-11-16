@@ -47,13 +47,13 @@ class Obra:
 
         if data_conclusao and data_conclusao < data_pedido:
             raise DadosObraInvalidos(
-                "A data de conclusão não pode ser anterior á data do pedido!")
+                "A data de conclusão não pode ser anterior à data do pedido!")
 
         if self.orcamento is not None and self.orcamento < 0:
             raise DadosObraInvalidos("O orçamento não pode ser negativo!")
 
         if self.custo_final is not None and self.custo_final < 0:
-            raise DadosObraInvalidos("o custo final não pode ser negativo!")
+            raise DadosObraInvalidos("O custo final não pode ser negativo!")
 
         object.__setattr__(self, "descricao", descricao)
         object.__setattr__(self, "data_pedido", data_pedido)

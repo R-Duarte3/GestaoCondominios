@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<h2>Registar obra</h2>
+<h2>{{ titulo }}</h2>
 
 {% if erro %}
 <p class="erro">{{ erro }}</p>
 {% endif %}
 
-<form method="post" action="{{ url_for('obras.criar') }}">
+<form method="post" action="{{ acao }}">
     <div>
         <label for="descricao">Descrição</label>
         <input
@@ -42,6 +42,41 @@
             value="{{ orcamento }}"
         >
     </div>
+
+    {% if mostrar_estado %}
+    <div>
+        <label for="estado">Estado</label>
+        <select id="estado" name="estado" required>
+            {% for item in estados %}
+            <option value="{{ item }}" {% if estado == item %}selected{% endif %}>
+                {{ nomes_estados[item] }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div>
+        <label for="data_conclusao">Data de conclusão (só se a obra estiver concluída)</label>
+        <input
+            id="data_conclusao"
+            name="data_conclusao"
+            type="date"
+            value="{{ data_conclusao }}"
+        >
+    </div>
+
+    <div>
+        <label for="custo_final">Custo final (€) (opcional)</label>
+        <input
+            id="custo_final"
+            name="custo_final"
+            type="number"
+            step="0.01"
+            min="0"
+            value="{{ custo_final }}"
+        >
+    </div>
+    {% endif %}
 
     <button type="submit">Guardar</button>
     <a href="{{ url_for('obras.listar') }}">Cancelar</a>

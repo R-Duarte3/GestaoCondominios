@@ -79,3 +79,34 @@ class ObraRepositorio:
                     obra.id_obras
                 ),
             )
+
+    def atualizar(self, obra):
+        with self.ligacao:
+            self.ligacao.execute(
+                """
+                UPDATE obras
+                SET descricao = ?,
+                    data_pedido = ?,
+                    data_conclusao = ?,
+                    estado = ?,
+                    orcamento = ?,
+                    custo_final = ?
+                WHERE id_obras = ?
+                """,
+                (
+                    obra.descricao,
+                    obra.data_pedido,
+                    obra.data_conclusao or None,
+                    obra.estado,
+                    obra.orcamento,
+                    obra.custo_final,
+                    obra.id_obras,
+                ),
+            )
+
+    def apagar(self, id_obras):
+        with self.ligacao:
+            self.ligacao.execute(
+                "DELETE FROM obras WHERE id_obras = ?",
+                (id_obras,),
+            )

@@ -46,3 +46,28 @@ class MoradorServico:
             data_saida=data_saida,
         )
         self.repositorio.registar_saida(morador)
+
+    def obter_morador(self, id_moradores):
+        morador = self.repositorio.obter(id_moradores)
+        if morador is None:
+            raise DadosMoradorInvalidos("O morador indicado não existe!")
+        return morador
+
+    def editar_morador(self, id_moradores, nome, nif, telefone, email, tipo, id_moradia, data_entrada, data_saida):
+        self.obter_morador(id_moradores)
+        morador = Morador(
+            id_moradores=id_moradores,
+            nome=nome,
+            nif=nif,
+            telefone=telefone,
+            email=email,
+            tipo=tipo,
+            id_moradia=id_moradia,
+            data_entrada=data_entrada,
+            data_saida=data_saida,
+        )
+        self.repositorio.atualizar(morador)
+
+    def apagar_morador(self, id_moradores):
+        self.obter_morador(id_moradores)
+        self.repositorio.apagar(id_moradores)

@@ -48,3 +48,51 @@ class DespesaRepositorio:
             data=despesa.data,
             fornecedor=despesa.fornecedor,
         )
+
+    def obter(self, id_despesas):
+        linha = self.ligacao.execute(
+            """
+            SELECT id_despesas, descricao, categoria, valor, data, fornecedor
+            FROM despesas
+            WHERE id_despesas = ?
+            """,
+            (id_despesas,),
+        ).fetchone()
+        if linha is None:
+            return None
+        return Despesa(
+            id_despesas=linha["id_despesas"],
+            descricao=linha["descricao"],
+            categoria=linha["categoria"],
+            valor=linha["valor"],
+            data=linha["data"],
+            fornecedor=linha["fornecedor"] or "",
+        )
+
+    def atualizar(self, despesa):
+        with self.ligacao:
+            self.ligacao.execute(
+                """
+                UPDATE despesas
+                SET descricao = ?,
+                    categoria = ?,
+                    valor = ?,
+                    data = ?,
+                    fornecedor = ?
+                where id_despesas = ?
+                """,
+                (
+                    despesa.descricao,
+                    despesa.categoria,
+                    despesa.valor,
+                    despesa.data,
+                    despesa.fornecedor or None,
+                    despesa.id_despesas
+                ),
+            )
+
+    def apagar(self, id_despesas):
+        with self.ligacao:
+            self.ligacao.execute(
+                "DELETE FROM despesas WHERE id_despesas = ?", (id_despesas,),
+            )

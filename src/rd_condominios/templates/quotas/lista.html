@@ -18,7 +18,8 @@
             <th>Vencimento</th>
             <th>Pagamento</th>
             <th>Estado</th>
-            <th>Ação</th>
+            <th>Registar pagamento</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
@@ -48,10 +49,18 @@
                 </form>
                 {% endif %}
             </td>
+            <td>
+                <a href="{{ url_for('quotas.formulario_editar', id_quotas=quota.id_quotas) }}">Editar</a>
+                <form class="form-apagar" method="post"
+                      action="{{ url_for('quotas.apagar', id_quotas=quota.id_quotas) }}"
+                      onsubmit="return confirm('Tem a certeza que quer apagar esta quota?');">
+                    <button type="submit" class="botao-apagar">Apagar</button>
+                </form>
+            </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="9">Ainda não existem quotas registadas.</td>
+            <td colspan="10">Ainda não existem quotas registadas.</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,4 +1,4 @@
-from rd_condominios.dominio.quota import Quota
+from rd_condominios.dominio.quota import Quota, DadosQuotaInvalidos
 
 
 class QuotaServico:
@@ -26,3 +26,25 @@ class QuotaServico:
 
     def registar_pagamento(self, id_quotas, data_pagamento):
         self.repositorio.registar_pagamento(id_quotas, data_pagamento)
+
+    def obter_quota(self, id_quotas):
+        return self.repositorio.obter(id_quotas)
+
+    def editar_quota(self, id_quotas, id_moradia, ano, mes, valor, data_vencimento, data_pagamento):
+        if self.repositorio.obter(id_quotas) is None:
+            raise DadosQuotaInvalidos("A quota indicada não existe!")
+        quota = Quota(
+            id_quotas=id_quotas,
+            id_moradia=id_moradia,
+            ano=ano,
+            mes=mes,
+            valor=valor,
+            data_vencimento=data_vencimento,
+            data_pagamento=data_pagamento,
+        )
+        self.repositorio.atualizar(quota)
+
+    def apagar_quota(self, id_quotas):
+        if self.repositorio.obter(id_quotas) is None:
+            raise DadosQuotaInvalidos("A quota indicada não existe!")
+        self.repositorio.apagar(id_quotas)

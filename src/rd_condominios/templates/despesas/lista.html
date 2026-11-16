@@ -22,6 +22,7 @@
             <th>Valor</th>
             <th>Parte por moradia</th>
             <th>Fornecedor</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
@@ -40,10 +41,18 @@
                 {% endif %}
             </td>
             <td>{{ despesa.fornecedor or "—" }}</td>
+            <td>
+                <a href="{{ url_for('despesas.formulario_editar', id_despesas=despesa.id_despesas) }}">Editar</a>
+                <form class="form-apagar" method="post"
+                      action="{{ url_for('despesas.apagar', id_despesas=despesa.id_despesas) }}"
+                      onsubmit="return confirm('Tem a certeza que quer apagar esta despesa?');">
+                    <button type="submit" class="botao-apagar">Apagar</button>
+                </form>
+            </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="7">Ainda não existem despesas registadas.</td>
+            <td colspan="8">Ainda não existem despesas registadas.</td>
         </tr>
         {% endfor %}
     </tbody>

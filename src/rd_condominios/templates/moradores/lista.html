@@ -25,6 +25,7 @@
             <th>Saída</th>
             <th>Situação</th>
             <th>Registar saída</th>
+            <th>Ações</th>
         </tr>
     </thead>
     <tbody>
@@ -56,10 +57,18 @@
                 </form>
                 {% endif %}
             </td>
+            <td>
+                <a href="{{ url_for('moradores.formulario_editar', id_moradores=morador.id_moradores) }}">Editar</a>
+                <form class="form-apagar" method="post"
+                      action="{{ url_for('moradores.apagar', id_moradores=morador.id_moradores) }}"
+                      onsubmit="return confirm('Tem a certeza que quer apagar este morador? O registo e o histórico perdem-se. Se ele saiu, use Registar saída.');">
+                    <button type="submit" class="botao-apagar">Apagar</button>
+                </form>
+            </td>
         </tr>
         {% else %}
         <tr>
-            <td colspan="11">Ainda não existem moradores registados.</td>
+            <td colspan="12">Ainda não existem moradores registados.</td>
         </tr>
         {% endfor %}
     </tbody>

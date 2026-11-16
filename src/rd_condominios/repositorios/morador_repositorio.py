@@ -100,3 +100,39 @@ class MoradorRepositorio:
                 """,
                 (morador.data_saida or None, morador.id_moradores),
             )
+
+    def atualizar(self, morador):
+        try:
+            with self.ligacao:
+                self.ligacao.execute(
+                    """
+                    UPDATE moradores
+                    SET nome = ?, nif = ?, telefone = ?, email = ?,
+                        tipo = ?, id_moradia =?,
+                        data_entrada = ?, data_saida = ?
+                    WHERE id_moradores = ?
+                    """,
+                    (
+                        morador.nome,
+                        morador.nif,
+                        morador.telefone,
+                        morador.email,
+                        morador.tipo,
+                        morador.id_moradia,
+                        morador.data_entrada,
+                        morador.data_saida or None,
+                        morador.id_moradores),
+                )
+        except sqlite3.IntegrityError as erro:
+            if erro.sqlite_errorcode == sqlite3.SQLITE_CONSTRAINT_UNIQUE:
+                raise NifDuplicado("Já existe um morador com este NIF!")
+            if erro.sqlite_errorcode == sqlite3.SQLITE_CONSTRAINT_FOREIGNKEY:
+                raise DadosMoradorInvalidos("A moradia escolhida não existe!")
+            raise
+
+    def apagar(self, id_moradores):
+        with self.ligacao:
+            self.ligacao.execute(
+                "DELETE FROM moradores WHERE id_moradores = ?",
+                (id_moradores,),
+            )

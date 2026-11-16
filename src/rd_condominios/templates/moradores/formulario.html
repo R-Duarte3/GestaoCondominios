@@ -1,14 +1,14 @@
 {% extends "base.html" %}
 
 {% block conteudo %}
-<h2>Registar morador</h2>
+<h2>{{ titulo }}</h2>
 
 {% if erro %}
 <p class="erro">{{ erro }}</p>
 {% endif %}
 
 {% if moradias %}
-<form method="post" action="{{ url_for('moradores.criar') }}">
+<form method="post" action="{{ acao }}">
     <div>
         <label for="nome">Nome</label>
         <input
@@ -88,6 +88,18 @@
             required
         >
     </div>
+
+    {% if mostrar_saida %}
+    <div>
+        <label for="data_saida">Data de saída (deixe vazio se ainda lá mora)</label>
+        <input
+            id="data_saida"
+            name="data_saida"
+            type="date"
+            value="{{ data_saida }}"
+        >
+    </div>
+    {% endif %}
 
 
     <button type="submit">Guardar</button>
