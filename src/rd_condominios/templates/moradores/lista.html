@@ -8,7 +8,7 @@
 {% endif %}
 
 <p>
-    <a href="{{ url_for('moradores.formulario') }}">Registar morador</a>
+        <a class="botao-registar" href="{{ url_for('moradores.formulario') }}">Registar morador</a>
 </p>
 
 <table>
@@ -57,8 +57,8 @@
                 </form>
                 {% endif %}
             </td>
-            <td>
-                <a href="{{ url_for('moradores.formulario_editar', id_moradores=morador.id_moradores) }}">Editar</a>
+            <td class="acoes">
+                <a class="botao-editar" href="{{ url_for('moradores.formulario_editar', id_moradores=morador.id_moradores) }}">Editar</a>
                 <form class="form-apagar" method="post"
                       action="{{ url_for('moradores.apagar', id_moradores=morador.id_moradores) }}"
                       onsubmit="return confirm('Tem a certeza que quer apagar este morador? O registo e o histórico perdem-se. Se ele saiu, use Registar saída.');">

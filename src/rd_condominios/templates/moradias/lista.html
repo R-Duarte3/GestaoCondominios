@@ -4,7 +4,8 @@
 <h2>Moradias</h2>
 
 <p>
-    <a href="{{ url_for('moradias.formulario') }}">Registar moradia</a>
+    <a class="botao-registar" href="{{ url_for('moradias.formulario') }}">Registar moradia</a>
+
 </p>
 
 <table>
@@ -26,8 +27,8 @@
             <td>{{ moradia.andar }}</td>
             <td>{{ moradia.tipologia }}</td>
             <td>{{ moradia.observacoes }}</td>
-            <td>
-                <a href="{{ url_for('moradias.formulario_editar', id_moradia=moradia.id_moradia) }}">Editar</a>
+            <td class="acoes">
+                <a class="botao-editar" href="{{ url_for('moradias.formulario_editar', id_moradia=moradia.id_moradia) }}">Editar</a>
                 <form class="form-apagar" method="post"
                       action="{{ url_for('moradias.apagar', id_moradia=moradia.id_moradia) }}"
                       onsubmit="return confirm('Tem a certeza que quer apagar esta moradia?');">

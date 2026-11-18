@@ -8,7 +8,7 @@
 {% endif %}
 
 <p>
-    <a href="{{ url_for('obras.formulario') }}">Registar obra</a>
+    <a class="botao-registar" href="{{ url_for('obras.formulario') }}">Registar obra</a>
 </p>
 
 <table>
@@ -63,8 +63,8 @@
                     <button type="submit">Atualizar</button>
                 </form>
             </td>
-            <td>
-                <a href="{{ url_for('obras.formulario_editar', id_obras=obra.id_obras) }}">Editar</a>
+            <td class="acoes">
+                <a class="botao-editar" href="{{ url_for('obras.formulario_editar', id_obras=obra.id_obras) }}">Editar</a>
                 <form class="form-apagar" method="post"
                       action="{{ url_for('obras.apagar', id_obras=obra.id_obras) }}"
                       onsubmit="return confirm('Tem a certeza que quer apagar esta obra?');">

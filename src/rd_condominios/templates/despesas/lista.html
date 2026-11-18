@@ -4,7 +4,7 @@
 <h2>Despesas</h2>
 
 <p>
-    <a href="{{ url_for('despesas.formulario') }}">Registar despesa</a>
+        <a class="botao-registar" href="{{ url_for('despesas.formulario') }}">Registar despesa</a>
 </p>
 
 <p>
@@ -41,8 +41,8 @@
                 {% endif %}
             </td>
             <td>{{ despesa.fornecedor or "—" }}</td>
-            <td>
-                <a href="{{ url_for('despesas.formulario_editar', id_despesas=despesa.id_despesas) }}">Editar</a>
+            <td class="acoes">
+                <a class="botao-editar" href="{{ url_for('despesas.formulario_editar', id_despesas=despesa.id_despesas) }}">Editar</a>
                 <form class="form-apagar" method="post"
                       action="{{ url_for('despesas.apagar', id_despesas=despesa.id_despesas) }}"
                       onsubmit="return confirm('Tem a certeza que quer apagar esta despesa?');">
