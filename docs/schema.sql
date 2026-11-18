@@ -20,7 +20,6 @@ CREATE TABLE IF NOT EXISTS "moradores" (
     "data_saida"    DATE, 
     FOREIGN KEY ("id_moradia") REFERENCES "moradias"("id_moradia")
 );
-);
 
 CREATE TABLE IF NOT EXISTS "quotas" (
     "id_quotas"       INTEGER PRIMARY KEY,
